@@ -23,7 +23,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Code auschecken
@@ -34,10 +34,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Abhängigkeiten & Playwright Browser installieren
+      - name: Abhängigkeiten & Playwright WebKit installieren
         run: |
           pip install -r requirements.txt
-          playwright install --with-deps webkit chromium
+          playwright install webkit
 
       - name: Tesla Bestand abfragen & Telegram Alert senden
         env:
