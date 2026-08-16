@@ -407,49 +407,61 @@ def update_history_and_tag(cars):
     return tagged_cars
 
 
-def send_telegram_alert(token, chat_id, cars_to_alert):
-    """Sendet formatierte Push-Benachrichtigungen über den Telegram Bot."""
-    if not token or not chat_id or not cars_to_alert:
+def send_telegram_summary_report(token, chat_id, total_scanned, cars, dashboard_url="https://oliver19xx.github.io/tesla-radar/"):
+    """Sendet bei jedem Bestandscheck einen kompakten Vorschau-Bericht per Telegram."""
+    if not token or not chat_id:
         return
         
-    print(f"\n{Colors.CYAN}📲 Sende Telegram Push-Benachrichtigung für {len(cars_to_alert)} Angebot(e)...{Colors.RESET}")
+    print(f"\n{Colors.CYAN}📲 Sende aktuellen Statusbericht an Telegram...{Colors.RESET}")
+    now_str = datetime.datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
     
-    for c in cars_to_alert:
-        status_header = "✨ <b>NEUES TESLA MODEL Y (XP7) GEFUNDEN!</b>" if c.get("status_tag") == "NEU" else f"📉 <b>PREISSENKUNG! ({c.get('status_text')})</b>"
-        
-        text = (
-            f"{status_header}\n\n"
-            f"💰 <b>Preis:</b> {c['preis']:,} €\n"
-            f"⚡ <b>Laufleistung:</b> {c['km']:,} km\n"
-            f"📅 <b>Erstzulassung:</b> {c['ez']}\n"
-            f"📍 <b>Standort:</b> {c['standort']} (🚗 <b>{c['fahrzeit_str']}</b> / {c['distanz_km']} km ab 49504)\n"
-            f"🔋 <b>Akku:</b> {c['akku_typ']}\n"
-            f"🎨 <b>Farbe:</b> {c['farbe']}\n"
-            f"🛞 <b>Felgen:</b> {c['felgen']}\n"
-            f"{'⚓ <b>Anhängerkupplung</b> vorhanden\n' if c.get('anhaengerkupplung') else ''}"
-            f"🆔 <b>VIN:</b> <code>{c['vin']}</code>\n\n"
-            f"👉 <a href='{c['url']}'><b>Hier direkt bei Tesla ansehen & reservieren</b></a>"
-        )
-        
-        url = f"https://api.telegram.org/bot{token}/sendMessage"
-        payload = {
-            "chat_id": chat_id,
-            "text": text,
-            "parse_mode": "HTML",
-            "disable_web_page_preview": False
-        }
-        
-        try:
-            req = urllib.request.Request(
-                url,
-                data=json.dumps(payload).encode("utf-8"),
-                headers={"Content-Type": "application/json"}
+    lines = [
+        "⚡ <b>TESLA MODEL Y RADAR - BERICHT</b>",
+        f"📅 Stand: {now_str}",
+        f"🔍 <b>{total_scanned}</b> gescannt ➔ <b>{len(cars)} passende XP7-Treffer</b>:\n"
+    ]
+    
+    if not cars:
+        lines.append("ℹ️ <i>Aktuell gibt es kein Grünheide Model Y (XP7) unter 35.000 € mit unter 70.000 km im deutschen Bestand.</i>\n")
+    else:
+        for idx, c in enumerate(cars, 1):
+            tag_badge = ""
+            if c.get("status_tag") == "NEU":
+                tag_badge = " ✨ <b>NEU!</b>"
+            elif c.get("status_tag") == "PREISSENKUNG":
+                tag_badge = f" 📉 <b>{c.get('status_text')}</b>"
+                
+            ahk_str = " | ⚓ AHK" if c.get("anhaengerkupplung") else ""
+            lines.append(
+                f"🚗 <b>{idx}. {c['modell']} ({c['ez_jahr']})</b>{tag_badge}\n"
+                f"• 💰 <b>{c['preis']:,} €</b> | ⚡ <b>{c['km']:,} km</b> | 📅 EZ: {c['ez']}\n"
+                f"• 📍 <b>{c['standort']}</b> (🚗 <b>{c['fahrzeit_str']}</b> / {c['distanz_km']} km ab 49504)\n"
+                f"• 🔋 {c['akku_typ']} | 🎨 {c['farbe']}{ahk_str}\n"
+                f"• 👉 <a href='{c['url']}'><b>Direkt bei Tesla ansehen</b></a>\n"
             )
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                if resp.status == 200:
-                    print(f"{Colors.GREEN}✓ Telegram Push gesendet für VIN {c['vin']}{Colors.RESET}")
-        except Exception as e:
-            print(f"{Colors.RED}✗ Fehler beim Senden an Telegram: {e}{Colors.RESET}")
+            
+    lines.append(f"🌐 <a href='{dashboard_url}'><b>Zum Online-Dashboard</b></a>")
+    text = "\n".join(lines)
+    
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": False
+    }
+    
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            if resp.status == 200:
+                print(f"{Colors.GREEN}✓ Telegram Statusbericht erfolgreich gesendet!{Colors.RESET}")
+    except Exception as e:
+        print(f"{Colors.RED}✗ Fehler beim Senden an Telegram: {e}{Colors.RESET}")
 
 
 def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=True):
@@ -925,14 +937,14 @@ def main():
         xp7_only=xp7_only
     )
     
-    # 6. Telegram Push-Benachrichtigungen senden (falls konfiguriert)
+    # 6. Telegram Statusbericht senden (falls Token & Chat-ID hinterlegt sind)
     if args.telegram_token and args.telegram_chat_id:
-        if args.notify_all:
-            cars_to_alert = tagged_cars
-        else:
-            cars_to_alert = [c for c in tagged_cars if c.get("status_tag") in ["NEU", "PREISSENKUNG"]]
-        
-        send_telegram_alert(args.telegram_token, args.telegram_chat_id, cars_to_alert)
+        send_telegram_summary_report(
+            args.telegram_token,
+            args.telegram_chat_id,
+            total_scanned=len(raw_cars),
+            cars=tagged_cars
+        )
     
     # 7. Im Terminal ausgeben
     print_terminal_results(tagged_cars)
