@@ -1,4 +1,5 @@
 venv/
+_archiv/
 .DS_Store
 __pycache__/
 *.pyc
