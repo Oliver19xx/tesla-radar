@@ -1,0 +1,63 @@
+name: Tesla Radar Scraper & Monitor
+
+on:
+  schedule:
+    # Läuft tagsüber alle 2 Stunden (UTC-Zeiten: 06:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00)
+    - cron: '0 6,8,10,12,14,16,18,20 * * *'
+  workflow_dispatch: # Ermöglicht manuelles Starten mit 1 Klick vom Smartphone aus!
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  scrape_and_deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Abhängigkeiten & Playwright WebKit installieren
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps webkit
+
+      - name: Tesla Bestand abfragen & Telegram Alert senden
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python scrape_tesla.py
+
+      - name: Historie und Report im Repository aktualisieren
+        run: |
+          git config --global user.name "Tesla Radar Bot"
+          git config --global user.email "bot@tesla-radar.local"
+          git add tesla_history.json angebote_aktuell.json index.html tesla_angebote.html
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-Update Tesla Radar [skip ci]" && git push)
+
+      - name: GitHub Pages Artefakt hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Auf GitHub Pages veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

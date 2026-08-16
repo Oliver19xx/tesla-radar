@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f19">
+    <title>Tesla Model Y Gebrauchtwagen-Radar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #131b2e;
+            --card-border: #1f2d4a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #38bdf8;
+            --accent-yellow: #f59e0b;
+            --tesla-red: #e82127;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 2.5rem 1.5rem;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.35rem;
+        }
+        .filter-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .filter-chip {
+            background: #1e293b;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            font-weight: 500;
+        }
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.875rem;
+            padding: 1.25rem;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-top: 0.35rem;
+            color: #ffffff;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+        .car-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        .car-card:hover {
+            transform: translateY(-3px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+        .price {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            white-space: nowrap;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .badge-new {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+        .badge-price-drop {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+        }
+        .badge-gruenheide {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        .badge-shanghai {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+        .badge-feature {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fcd34d;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .badge-info {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+        }
+        .car-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.15rem;
+        }
+        .car-vin {
+            font-size: 0.75rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+            background: #0d1322;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            border: 1px solid #182238;
+        }
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .spec-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.15rem;
+        }
+        .spec-value {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .drive-val {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+        .km-val {
+            color: var(--accent-blue);
+        }
+        .location-val {
+            color: #ffffff;
+        }
+        .order-button {
+            display: block;
+            text-align: center;
+            background: var(--tesla-red);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .order-button:hover {
+            background: #c2191e;
+            transform: scale(1.01);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--card-border);
+        }
+        footer {
+            margin-top: 3.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>⚡ Tesla Model Y Gebrauchtwagen-Radar</h1>
+                <p class="subtitle">Automatische Überwachung • PLZ 49504 (Lotte / Osnabrück) • Stand: 16.08.2026 um 14:12 Uhr</p>
+                <div class="filter-summary">
+                    <span class="filter-chip" style="border-color: #38bdf8; color: #38bdf8;">🇩🇪 Nur Grünheide (VIN: XP7...)</span>
+                    <span class="filter-chip">📅 EZ: 2023 - 2026</span>
+                    <span class="filter-chip">💰 Max. 35,000 €</span>
+                    <span class="filter-chip">⚡ Max. 70,000 km</span>
+                    <span class="filter-chip">🛡️ Nur unfallfrei</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">Passende Angebote (XP7)</div>
+                <div class="stat-value">2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Günstigster Preis</div>
+                <div class="stat-value" style="color: var(--accent-green);">33,400 €</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Niedrigste Laufleistung</div>
+                <div class="stat-value" style="color: var(--accent-blue);">38,319 km</div>
+            </div>
+        </div>
+
+        
+        <div class="grid">
+            
+        <div class="car-card">
+            <div class="card-top">
+                <div class="badges-row">
+                    <span class="badge badge-info">Verfügbar</span>
+                    <span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>
+                    
+                </div>
+                <div class="price">33,400 €</div>
+            </div>
+            
+            <h3 class="car-title">Model Y Hinterradantrieb</h3>
+            <div class="car-vin">VIN: XP7YGCEJ7PB153017</div>
+            
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Kilometerstand</span>
+                    <span class="spec-value km-val">49,473 km</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Erstzulassung</span>
+                    <span class="spec-value">20.06.2023</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Fahrzeit (ab 49504 Lotte)</span>
+                    <span class="spec-value drive-val">🚗 <strong>ca. 5h 30m</strong> (585 km)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Standort</span>
+                    <span class="spec-value location-val">📍 Neu-Ulm</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Farbe / Lack</span>
+                    <span class="spec-value">Pearl White Multi-Coat</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Felgen</span>
+                    <span class="spec-value">19-Zoll Gemini-Felgen</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Akku-Technik</span>
+                    <span class="spec-value">LFP (BYD Blade)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Garantie Basisfahrzeug</span>
+                    <span class="spec-value">Bis 06/2027</span>
+                </div>
+            </div>
+
+            <div class="card-bottom">
+                <a href="https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017" target="_blank" class="order-button">
+                    Fahrzeug bei Tesla ansehen ➔
+                </a>
+            </div>
+        </div>
+        
+        <div class="car-card">
+            <div class="card-top">
+                <div class="badges-row">
+                    <span class="badge badge-info">Verfügbar</span>
+                    <span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>
+                    
+                </div>
+                <div class="price">34,900 €</div>
+            </div>
+            
+            <h3 class="car-title">Model Y Hinterradantrieb</h3>
+            <div class="car-vin">VIN: XP7YGCES2RB382734</div>
+            
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Kilometerstand</span>
+                    <span class="spec-value km-val">38,319 km</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Erstzulassung</span>
+                    <span class="spec-value">26.02.2024</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Fahrzeit (ab 49504 Lotte)</span>
+                    <span class="spec-value drive-val">🚗 <strong>ca. 5h 00m</strong> (520 km)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Standort</span>
+                    <span class="spec-value location-val">📍 Holzgerlingen</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Farbe / Lack</span>
+                    <span class="spec-value">Pearl White Multi-Coat</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Felgen</span>
+                    <span class="spec-value">19-Zoll Gemini-Felgen</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Akku-Technik</span>
+                    <span class="spec-value">LFP (BYD Blade)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Garantie Basisfahrzeug</span>
+                    <span class="spec-value">Bis 02/2028</span>
+                </div>
+            </div>
+
+            <div class="card-bottom">
+                <a href="https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734" target="_blank" class="order-button">
+                    Fahrzeug bei Tesla ansehen ➔
+                </a>
+            </div>
+        </div>
+        
+        </div>
+
+        <footer>
+            <p>Täglicher Check via <code>./check_angebote.sh</code> • Fahrzeiten berechnet ab PLZ 49504 (Lotte)</p>
+        </footer>
+    </div>
+</body>
+</html>
