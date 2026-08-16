@@ -34,10 +34,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Abhängigkeiten & Playwright WebKit installieren
+      - name: Abhängigkeiten & Playwright Browser installieren
         run: |
           pip install -r requirements.txt
-          playwright install --with-deps webkit
+          playwright install --with-deps webkit chromium
 
       - name: Tesla Bestand abfragen & Telegram Alert senden
         env:

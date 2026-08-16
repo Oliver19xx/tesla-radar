@@ -43,61 +43,137 @@ class Colors:
 def fetch_tesla_inventory(zip_code="49504", model="my"):
     """
     Ruft alle verfügbaren Gebrauchtwagen über die offizielle Tesla Inventory API ab.
-    Verwendet Playwright WebKit für zuverlässige Verbindung ohne Bot-Blockaden.
+    Verwendet Playwright WebKit & Chromium mit intelligenter Fehlerbehandlung.
     """
     print(f"\n{Colors.CYAN}⏳ Rufe aktuelle Gebrauchtwagen von Tesla ab (PLZ {zip_code})...{Colors.RESET}")
     
+    all_raw_cars = []
+    
     with sync_playwright() as p:
-        browser = p.webkit.launch(headless=True)
-        page = browser.new_page()
-        
-        # Initialer Seitenaufruf zur Session-Erstellung
-        page.goto(f"https://www.tesla.com/de_DE/inventory/used/{model}?zip={zip_code}", wait_until="domcontentloaded")
-        page.wait_for_timeout(2500)
-        
-        # Paginiertes Abrufen aller Fahrzeuge im Bestand
-        all_raw_cars = page.evaluate(f'''async () => {{
-            let cars = [];
-            let offset = 0;
-            let outsideOffset = 0;
-            for (let i = 0; i < 15; i++) {{
-                const query = {{
-                    "query": {{
-                        "model": "{model}",
-                        "condition": "used",
-                        "options": {{}},
-                        "arrangeby": "Price",
-                        "order": "asc",
-                        "market": "DE",
-                        "language": "de",
-                        "super_region": "europe",
-                        "lng": 7.92,
-                        "lat": 52.28,
-                        "zip": "{zip_code}",
-                        "range": 0
-                    }},
-                    "offset": offset,
-                    "count": 24,
-                    "outsideOffset": outsideOffset,
-                    "outsideSearch": true
-                }};
-                const resp = await fetch("https://www.tesla.com/inventory/api/v4/inventory-results?query=" + encodeURIComponent(JSON.stringify(query)));
-                const data = await resp.json();
-                const results = data.results || [];
-                if (!results.length) break;
-                cars.push(...results);
-                offset += results.length;
-                outsideOffset += results.length;
-                if (results.length < 24) break;
-            }}
-            return cars;
-        }}''')
-        browser.close()
+        # 1. Versuch: WebKit
+        try:
+            browser = p.webkit.launch(headless=True)
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
+                locale="de-DE",
+                timezone_id="Europe/Berlin"
+            )
+            page = context.new_page()
+            page.goto(f"https://www.tesla.com/de_DE/inventory/used/{model}?zip={zip_code}", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(4000)
+            
+            all_raw_cars = page.evaluate(f'''async () => {{
+                let cars = [];
+                let offset = 0;
+                let outsideOffset = 0;
+                for (let i = 0; i < 15; i++) {{
+                    try {{
+                        const query = {{
+                            "query": {{
+                                "model": "{model}",
+                                "condition": "used",
+                                "options": {{}},
+                                "arrangeby": "Price",
+                                "order": "asc",
+                                "market": "DE",
+                                "language": "de",
+                                "super_region": "europe",
+                                "lng": 7.92,
+                                "lat": 52.28,
+                                "zip": "{zip_code}",
+                                "range": 0
+                            }},
+                            "offset": offset,
+                            "count": 24,
+                            "outsideOffset": outsideOffset,
+                            "outsideSearch": true
+                        }};
+                        const resp = await fetch("https://www.tesla.com/inventory/api/v4/inventory-results?query=" + encodeURIComponent(JSON.stringify(query)));
+                        if (!resp.ok) break;
+                        const data = await resp.json();
+                        const results = data.results || [];
+                        if (!results.length) break;
+                        cars.push(...results);
+                        offset += results.length;
+                        outsideOffset += results.length;
+                        if (results.length < 24) break;
+                    }} catch (err) {{
+                        break;
+                    }}
+                }}
+                return cars;
+            }}''')
+            browser.close()
+        except Exception as e:
+            print(f"{Colors.YELLOW}Hinweis zu WebKit: {e}{Colors.RESET}")
+
+        # 2. Fallback falls WebKit leer war: Chromium
+        if not all_raw_cars:
+            print(f"{Colors.YELLOW}Versuche Abruf über Chromium-Engine...{Colors.RESET}")
+            try:
+                browser = p.chromium.launch(
+                    headless=True,
+                    args=["--disable-blink-features=AutomationControlled", "--no-sandbox"]
+                )
+                context = browser.new_context(
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+                    locale="de-DE",
+                    timezone_id="Europe/Berlin"
+                )
+                context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined});")
+                page = context.new_page()
+                page.goto(f"https://www.tesla.com/de_DE/inventory/used/{model}?zip={zip_code}", wait_until="domcontentloaded", timeout=45000)
+                page.wait_for_timeout(4000)
+                
+                all_raw_cars = page.evaluate(f'''async () => {{
+                    let cars = [];
+                    let offset = 0;
+                    let outsideOffset = 0;
+                    for (let i = 0; i < 15; i++) {{
+                        try {{
+                            const query = {{
+                                "query": {{
+                                    "model": "{model}",
+                                    "condition": "used",
+                                    "options": {{}},
+                                    "arrangeby": "Price",
+                                    "order": "asc",
+                                    "market": "DE",
+                                    "language": "de",
+                                    "super_region": "europe",
+                                    "lng": 7.92,
+                                    "lat": 52.28,
+                                    "zip": "{zip_code}",
+                                    "range": 0
+                                }},
+                                "offset": offset,
+                                "count": 24,
+                                "outsideOffset": outsideOffset,
+                                "outsideSearch": true
+                            }};
+                            const resp = await fetch("https://www.tesla.com/inventory/api/v4/inventory-results?query=" + encodeURIComponent(JSON.stringify(query)));
+                            if (!resp.ok) break;
+                            const data = await resp.json();
+                            const results = data.results || [];
+                            if (!results.length) break;
+                            cars.push(...results);
+                            offset += results.length;
+                            outsideOffset += results.length;
+                            if (results.length < 24) break;
+                        }} catch (err) {{
+                            break;
+                        }}
+                    }}
+                    return cars;
+                }}''')
+                browser.close()
+            except Exception as e:
+                print(f"{Colors.RED}Chromium-Fehler: {e}{Colors.RESET}")
         
     # Deduplizieren anhand VIN
     seen_vins = set()
     unique_cars = []
-    for car in all_raw_cars:
+    for car in (all_raw_cars or []):
         vin = car.get("VIN")
         if vin and vin not in seen_vins:
             seen_vins.add(vin)
