@@ -355,7 +355,9 @@ def update_history_and_tag(cars):
     """
     Vergleicht den aktuellen Abruf mit der Historie:
     - Markiert NEUE Fahrzeuge (✨ NEU)
-    - Erkennt PREISÄNDERUNGEN (📉 Preissenkung)
+    - Erkennt PREISÄNDERUNGEN (📉 Preissenkung / 📈 Preisanstieg)
+    - Erkennt verkaufte/entfernte Fahrzeuge
+    - Gibt zurück: (tagged_cars, has_changes)
     """
     history = {}
     if DB_FILE.exists():
@@ -367,6 +369,7 @@ def update_history_and_tag(cars):
 
     today_str = datetime.date.today().isoformat()
     tagged_cars = []
+    has_changes = False
 
     for car in cars:
         vin = car["vin"]
@@ -375,6 +378,7 @@ def update_history_and_tag(cars):
         if vin not in history:
             car_tagged["status_tag"] = "NEU"
             car_tagged["status_text"] = "✨ NEU"
+            has_changes = True
             history[vin] = {
                 "first_seen": today_str,
                 "last_seen": today_str,
@@ -393,16 +397,25 @@ def update_history_and_tag(cars):
                 car_tagged["status_tag"] = "PREISSENKUNG"
                 car_tagged["status_text"] = f"📉 -{diff} €"
                 old_data["last_price"] = car["preis"]
+                has_changes = True
             elif car["preis"] > old_price:
                 diff = car["preis"] - old_price
                 car_tagged["status_tag"] = "PREISANSTIEG"
                 car_tagged["status_text"] = f"📈 +{diff} €"
                 old_data["last_price"] = car["preis"]
+                has_changes = True
             else:
                 car_tagged["status_tag"] = "BEKANNT"
                 car_tagged["status_text"] = "Verfügbar"
                 
         tagged_cars.append(car_tagged)
+
+    # Prüfen, ob Fahrzeuge aus dem vorherigen Durchlauf verkauft/entfernt wurden
+    previous_vins = history.get("_last_active_vins", [])
+    current_vins = [c["vin"] for c in cars]
+    if previous_vins and set(previous_vins) != set(current_vins):
+        has_changes = True
+    history["_last_active_vins"] = current_vins
 
     # Historie & aktueller JSON-Export speichern
     with open(DB_FILE, "w", encoding="utf-8") as f:
@@ -411,45 +424,60 @@ def update_history_and_tag(cars):
     with open(LATEST_JSON, "w", encoding="utf-8") as f:
         json.dump(tagged_cars, f, indent=2, ensure_ascii=False)
 
-    return tagged_cars
+    return tagged_cars, has_changes
 
 
-def send_telegram_summary_report(token, chat_id, total_scanned, cars, dashboard_url="https://oliver19xx.github.io/tesla-radar/"):
-    """Sendet bei jedem Bestandscheck einen kompakten Vorschau-Bericht per Telegram."""
+def send_telegram_summary_report(token, chat_id, total_scanned, cars, has_changes=False, dashboard_url="https://oliver19xx.github.io/tesla-radar/"):
+    """
+    Sendet per Telegram:
+    - Bei Änderungen: Den vollen Bericht mit Auto-Details und Highlights.
+    - Ohne Änderungen: Einen kurzen kompakten Hinweis ohne Auto-Listen.
+    """
     if not token or not chat_id:
         return
         
-    print(f"\n{Colors.CYAN}📲 Sende aktuellen Statusbericht an Telegram...{Colors.RESET}")
+    print(f"\n{Colors.CYAN}📲 Sende Telegram-Benachrichtigung (Änderungen: {has_changes})...{Colors.RESET}")
     now_str = datetime.datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
     
-    lines = [
-        "⚡ <b>TESLA MODEL Y RADAR - BERICHT</b>",
-        f"📅 Stand: {now_str}",
-        f"🔍 <b>{total_scanned}</b> gescannt ➔ <b>{len(cars)} passende XP7-Treffer</b>:\n"
-    ]
-    
-    if not cars:
-        lines.append("ℹ️ <i>Aktuell gibt es kein Grünheide Model Y (XP7) unter 35.000 € mit unter 70.000 km im deutschen Bestand.</i>\n")
+    if not has_changes:
+        text = (
+            "⚡ <b>TESLA MODEL Y RADAR</b>\n"
+            f"📅 Stand: {now_str}\n"
+            f"🔍 <b>{total_scanned}</b> gescannt • <b>{len(cars)} passende(r) XP7-Treffer</b>\n\n"
+            "ℹ️ <i>Keine neuen Angebote oder Preisänderungen im Bestand.</i>\n\n"
+            f"🌐 <a href=\"{dashboard_url}\"><b>Zum Online-Dashboard</b></a>"
+        )
     else:
-        for idx, c in enumerate(cars, 1):
-            tag_badge = ""
-            if c.get("status_tag") == "NEU":
-                tag_badge = " ✨ <b>NEU!</b>"
-            elif c.get("status_tag") == "PREISSENKUNG":
-                tag_badge = f" 📉 <b>{c.get('status_text')}</b>"
+        lines = [
+            "⚡ <b>TESLA MODEL Y RADAR - ÄNDERUNGEN GEFUNDEN!</b>",
+            f"📅 Stand: {now_str}",
+            f"🔍 <b>{total_scanned}</b> gescannt ➔ <b>{len(cars)} passende XP7-Treffer</b>:\n"
+        ]
+        
+        if not cars:
+            lines.append("ℹ️ <i>Aktuell gibt es kein Grünheide Model Y (XP7) unter 35.000 € mit unter 70.000 km im deutschen Bestand.</i>\n")
+        else:
+            for idx, c in enumerate(cars, 1):
+                tag_badge = ""
+                if c.get("status_tag") == "NEU":
+                    tag_badge = " ✨ <b>NEU!</b>"
+                elif c.get("status_tag") == "PREISSENKUNG":
+                    tag_badge = f" 📉 <b>{c.get('status_text')}</b>"
+                elif c.get("status_tag") == "PREISANSTIEG":
+                    tag_badge = f" 📈 <b>{c.get('status_text')}</b>"
+                    
+                ahk_str = " | ⚓ AHK" if c.get("anhaengerkupplung") else ""
+                lines.append(
+                    f"🚗 <b>{idx}. {c['modell']} ({c['ez_jahr']})</b>{tag_badge}\n"
+                    f"• 💰 <b>{c['preis']:,} €</b> | ⚡ <b>{c['km']:,} km</b> | 📅 EZ: {c['ez']}\n"
+                    f"• 🛡️ <b>Zustand:</b> {c['zustand_text']}\n"
+                    f"• 📍 <b>{c['standort']}</b> (🚗 <b>{c['fahrzeit_str']}</b> / {c['distanz_km']} km ab 49504)\n"
+                    f"• 🔋 {c['akku_typ']} | 🎨 {c['farbe']}{ahk_str}\n"
+                    f"• 👉 <a href='{c['url']}'><b>Direkt bei Tesla ansehen</b></a>\n"
+                )
                 
-            ahk_str = " | ⚓ AHK" if c.get("anhaengerkupplung") else ""
-            lines.append(
-                f"🚗 <b>{idx}. {c['modell']} ({c['ez_jahr']})</b>{tag_badge}\n"
-                f"• 💰 <b>{c['preis']:,} €</b> | ⚡ <b>{c['km']:,} km</b> | 📅 EZ: {c['ez']}\n"
-                f"• 🛡️ <b>Zustand:</b> {c['zustand_text']}\n"
-                f"• 📍 <b>{c['standort']}</b> (🚗 <b>{c['fahrzeit_str']}</b> / {c['distanz_km']} km ab 49504)\n"
-                f"• 🔋 {c['akku_typ']} | 🎨 {c['farbe']}{ahk_str}\n"
-                f"• 👉 <a href='{c['url']}'><b>Direkt bei Tesla ansehen</b></a>\n"
-            )
-            
-    lines.append(f"🌐 <a href='{dashboard_url}'><b>Zum Online-Dashboard</b></a>")
-    text = "\n".join(lines)
+        lines.append(f"🌐 <a href='{dashboard_url}'><b>Zum Online-Dashboard</b></a>")
+        text = "\n".join(lines)
     
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {
@@ -952,8 +980,8 @@ def main():
         xp7_only=xp7_only
     )
     
-    # 4. Mit Verlaufsdaten abgleichen (NEU / Preissenkungen)
-    tagged_cars = update_history_and_tag(matched_cars)
+    # 4. Mit Verlaufsdaten abgleichen (NEU / Preissenkungen / Abgänge)
+    tagged_cars, has_changes = update_history_and_tag(matched_cars)
     
     # 5. HTML Dashboard erzeugen
     generate_html_report(
@@ -971,7 +999,8 @@ def main():
             args.telegram_token,
             args.telegram_chat_id,
             total_scanned=len(raw_cars),
-            cars=tagged_cars
+            cars=tagged_cars,
+            has_changes=(has_changes or args.notify_all)
         )
     
     # 7. Im Terminal ausgeben
