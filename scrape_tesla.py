@@ -237,12 +237,16 @@ def parse_car_details(raw):
     has_tow_hitch = ("$AP02" in opt_codes or "$AH00" in opt_codes or "tow" in opt_codes.lower() or "kupplung" in opt_codes.lower())
     
     # Unfall- / Reparaturschaden Disclosure prüfen
+    # Unfall- / Reparaturschaden & VehicleHistory Disclosure prüfen
+    vehicle_history_raw = str(raw.get("VehicleHistory", "CLEAN")).strip().upper()
     damage_guids = raw.get("DamageDisclosureGuids") or []
     has_damage = (
+        (vehicle_history_raw != "" and vehicle_history_raw != "CLEAN") or
         raw.get("DamageDisclosure") is True or 
         raw.get("HasDamagePhotos") is True or 
         len(damage_guids) > 0
     )
+    zustand_text = "🛡️ Unfallfrei (CLEAN)" if not has_damage else "⚠️ Reparierter Vorschaden (Repariertes Gebrauchtfahrzeug)"
 
     # Erstzulassungsdatum formatieren
     first_reg_raw = raw.get("FirstRegistrationDate")
@@ -315,6 +319,8 @@ def parse_car_details(raw):
         "autopilot": autopilot,
         "anhaengerkupplung": has_tow_hitch,
         "unfall_oder_schaden": has_damage,
+        "zustand_text": zustand_text,
+        "vehicle_history": vehicle_history_raw,
         "garantie_fahrzeug": garantie_fahrzeug,
         "garantie_akku": garantie_akku,
         "url": f"https://www.tesla.com/de_DE/my/order/{vin}",
@@ -335,6 +341,7 @@ def filter_cars(cars, min_year=2023, max_year=2026, max_price=35000, max_km=7000
             continue
         if c["km"] > max_km:
             continue
+        # Strikte Unfallfrei-Prüfung (inkl. PREVIOUS ACCIDENT(S) & Damage Disclosure)
         if unfallfrei_only and c["unfall_oder_schaden"]:
             continue
         matched.append(c)
@@ -435,6 +442,7 @@ def send_telegram_summary_report(token, chat_id, total_scanned, cars, dashboard_
             lines.append(
                 f"🚗 <b>{idx}. {c['modell']} ({c['ez_jahr']})</b>{tag_badge}\n"
                 f"• 💰 <b>{c['preis']:,} €</b> | ⚡ <b>{c['km']:,} km</b> | 📅 EZ: {c['ez']}\n"
+                f"• 🛡️ <b>Zustand:</b> {c['zustand_text']}\n"
                 f"• 📍 <b>{c['standort']}</b> (🚗 <b>{c['fahrzeit_str']}</b> / {c['distanz_km']} km ab 49504)\n"
                 f"• 🔋 {c['akku_typ']} | 🎨 {c['farbe']}{ahk_str}\n"
                 f"• 👉 <a href='{c['url']}'><b>Direkt bei Tesla ansehen</b></a>\n"
@@ -480,12 +488,14 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
 
         herkunft_badge = '<span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>' if "Grünheide" in c["herkunft_kurz"] else '<span class="badge badge-shanghai">🇨🇳 Shanghai (CATL)</span>'
         ahk_badge = '<span class="badge badge-feature">⚓ Anhängerkupplung</span>' if c.get("anhaengerkupplung") else ''
+        zustand_badge = '<span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>' if not c.get("unfall_oder_schaden") else '<span class="badge badge-accident">⚠️ Reparierter Vorschaden</span>'
         
         cards_html.append(f"""
         <div class="car-card">
             <div class="card-top">
                 <div class="badges-row">
                     {status_badge}
+                    {zustand_badge}
                     {herkunft_badge}
                     {ahk_badge}
                 </div>
@@ -511,6 +521,10 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
                 <div class="spec-item">
                     <span class="spec-label">Standort</span>
                     <span class="spec-value location-val">📍 {c['standort']}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Zustand</span>
+                    <span class="spec-value">{c['zustand_text']}</span>
                 </div>
                 <div class="spec-item">
                     <span class="spec-label">Farbe / Lack</span>
@@ -706,6 +720,16 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
             color: #fbbf24;
             border: 1px solid rgba(245, 158, 11, 0.35);
         }}
+        .badge-clean {{
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }}
+        .badge-accident {{
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }}
         .badge-gruenheide {{
             background: rgba(56, 189, 248, 0.15);
             color: #38bdf8;
@@ -882,6 +906,7 @@ def print_terminal_results(cars):
         features = [
             f"VIN: {c['vin']}",
             f"EZ: {c['ez']}",
+            f"Zustand: {c['zustand_text']}",
             f"Lack: {c['farbe']}",
             f"Akku: {c['akku_typ']}"
         ]
