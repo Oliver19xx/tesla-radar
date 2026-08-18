@@ -21,7 +21,10 @@ import sys
 import urllib.request
 import webbrowser
 from pathlib import Path
+from zoneinfo import ZoneInfo
 from playwright.sync_api import sync_playwright
+
+BERLIN_TZ = ZoneInfo("Europe/Berlin")
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_FILE = BASE_DIR / "tesla_history.json"
@@ -324,7 +327,7 @@ def parse_car_details(raw):
         "garantie_fahrzeug": garantie_fahrzeug,
         "garantie_akku": garantie_akku,
         "url": f"https://www.tesla.com/de_DE/my/order/{vin}",
-        "raw_updated": datetime.datetime.now().isoformat()
+        "raw_updated": datetime.datetime.now(BERLIN_TZ).isoformat()
     }
 
 
@@ -367,7 +370,7 @@ def update_history_and_tag(cars):
         except Exception:
             history = {}
 
-    today_str = datetime.date.today().isoformat()
+    today_str = datetime.datetime.now(BERLIN_TZ).date().isoformat()
     tagged_cars = []
     has_changes = False
 
@@ -437,7 +440,7 @@ def send_telegram_summary_report(token, chat_id, total_scanned, cars, has_change
         return
         
     print(f"\n{Colors.CYAN}📲 Sende Telegram-Benachrichtigung (Änderungen: {has_changes})...{Colors.RESET}")
-    now_str = datetime.datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+    now_str = datetime.datetime.now(BERLIN_TZ).strftime("%d.%m.%Y um %H:%M Uhr")
     
     if not has_changes:
         text = (
@@ -502,7 +505,7 @@ def send_telegram_summary_report(token, chat_id, total_scanned, cars, has_change
 
 def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=True):
     """Erstellt ein interaktives, modernes HTML Dashboard für die schnelle tägliche Übersicht."""
-    now_str = datetime.datetime.now().strftime("%d.%m.%Y um %H:%M Uhr")
+    now_str = datetime.datetime.now(BERLIN_TZ).strftime("%d.%m.%Y um %H:%M Uhr")
     
     cards_html = []
     for c in cars:
