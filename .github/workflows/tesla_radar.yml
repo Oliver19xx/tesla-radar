@@ -2,8 +2,8 @@ name: Tesla Radar Scraper & Monitor
 
 on:
   schedule:
-    # Läuft tagsüber alle 2 Stunden nach deutscher Zeit (07:00, 09:00, 11:00, 13:00, 15:00, 17:00, 19:00, 21:00 Uhr)
-    - cron: '0 5,7,9,11,13,15,17,19 * * *'
+    # Läuft tagsüber alle 2 Stunden nach deutscher Zeit (06:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00, 22:00 Uhr)
+    - cron: '0 4,6,8,10,12,14,16,18,20 * * *'
   workflow_dispatch: # Ermöglicht manuelles Starten mit 1 Klick vom Smartphone aus!
   push:
     branches:
