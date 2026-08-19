@@ -155,6 +155,11 @@
             color: #fbbf24;
             border: 1px solid rgba(245, 158, 11, 0.35);
         }
+        .badge-sold {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }
         .badge-clean {
             background: rgba(16, 185, 129, 0.15);
             color: #34d399;
@@ -183,6 +188,43 @@
         .badge-info {
             background: rgba(148, 163, 184, 0.15);
             color: #94a3b8;
+        }
+        .car-card.is-sold {
+            opacity: 0.82;
+            border-color: #1e293b;
+            background: #0d1424;
+        }
+        .car-card.is-sold:hover {
+            opacity: 1;
+            border-color: #475569;
+        }
+        .price-sold {
+            color: #94a3b8 !important;
+            text-decoration: line-through;
+            font-size: 1.4rem;
+        }
+        .order-button.btn-sold {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }
+        .order-button.btn-sold:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 2.5rem 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.25rem;
         }
         .car-title {
             font-size: 1.2rem;
@@ -252,9 +294,10 @@
             background: var(--card-bg);
             border-radius: 1rem;
             border: 1px solid var(--card-border);
+            margin-top: 1rem;
         }
         footer {
-            margin-top: 3.5rem;
+            margin-top: 4rem;
             text-align: center;
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -268,7 +311,7 @@
         <header>
             <div>
                 <h1>⚡ Tesla Model Y Gebrauchtwagen-Radar</h1>
-                <p class="subtitle">Automatische Überwachung • PLZ 49504 (Lotte / Osnabrück) • Stand: 19.08.2026 um 10:28 Uhr</p>
+                <p class="subtitle">Automatische Überwachung • PLZ 49504 (Lotte / Osnabrück) • Stand: 19.08.2026 um 10:41 Uhr</p>
                 <div class="filter-summary">
                     <span class="filter-chip" style="border-color: #38bdf8; color: #38bdf8;">🇩🇪 Nur Grünheide (VIN: XP7...)</span>
                     <span class="filter-chip">📅 EZ: 2023 - 2026</span>
@@ -281,12 +324,16 @@
 
         <div class="stats-bar">
             <div class="stat-card">
-                <div class="stat-label">Passende Angebote (XP7)</div>
-                <div class="stat-value">3</div>
+                <div class="stat-label">Aktuell verfügbar (XP7)</div>
+                <div class="stat-value">2</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Günstigster Preis</div>
-                <div class="stat-value" style="color: var(--accent-green);">33,500 €</div>
+                <div class="stat-label">Bereits verkauft / Vergangen</div>
+                <div class="stat-value" style="color: var(--text-muted);">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Günstigster aktiver Preis</div>
+                <div class="stat-value" style="color: var(--accent-green);">33,600 €</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Niedrigste Laufleistung</div>
@@ -294,73 +341,14 @@
             </div>
         </div>
 
+        <h2 class="section-title">🟢 Aktuell verfügbare Angebote (2)</h2>
         
         <div class="grid">
             
         <div class="car-card">
             <div class="card-top">
                 <div class="badges-row">
-                    <span class="badge badge-info">Verfügbar</span>
-                    <span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>
-                    <span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>
-                    
-                </div>
-                <div class="price">33,500 €</div>
-            </div>
-            
-            <h3 class="car-title">Model Y Hinterradantrieb</h3>
-            <div class="car-vin">VIN: XP7YGCEJ5PB142212</div>
-            
-            <div class="specs-grid">
-                <div class="spec-item">
-                    <span class="spec-label">Kilometerstand</span>
-                    <span class="spec-value km-val">52,029 km</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Erstzulassung</span>
-                    <span class="spec-value">27.06.2023</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Fahrzeit (ab 49504 Lotte)</span>
-                    <span class="spec-value drive-val">🚗 <strong>ca. 3h 55m</strong> (410 km)</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Standort</span>
-                    <span class="spec-value location-val">📍 Potsdam-Mittelmark</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Zustand</span>
-                    <span class="spec-value">🛡️ Unfallfrei (CLEAN)</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Farbe / Lack</span>
-                    <span class="spec-value">Pearl White Multi-Coat</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Felgen</span>
-                    <span class="spec-value">19-Zoll Gemini-Felgen</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Akku-Technik</span>
-                    <span class="spec-value">LFP (BYD Blade)</span>
-                </div>
-                <div class="spec-item">
-                    <span class="spec-label">Garantie Basisfahrzeug</span>
-                    <span class="spec-value">Bis 06/2027</span>
-                </div>
-            </div>
-
-            <div class="card-bottom">
-                <a href="https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212" target="_blank" class="order-button">
-                    Fahrzeug bei Tesla ansehen ➔
-                </a>
-            </div>
-        </div>
-        
-        <div class="car-card">
-            <div class="card-top">
-                <div class="badges-row">
-                    <span class="badge badge-info">Verfügbar</span>
+                    <span class="badge badge-new">✨ NEU IM BESTAND</span>
                     <span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>
                     <span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>
                     
@@ -420,7 +408,7 @@
         <div class="car-card">
             <div class="card-top">
                 <div class="badges-row">
-                    <span class="badge badge-info">Verfügbar</span>
+                    <span class="badge badge-new">✨ NEU IM BESTAND</span>
                     <span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>
                     <span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>
                     
@@ -479,8 +467,10 @@
         
         </div>
 
+        
+
         <footer>
-            <p>Täglicher Check via <code>./check_angebote.sh</code> • Fahrzeiten berechnet ab PLZ 49504 (Lotte)</p>
+            <p>Automatische Cloud-Überwachung via GitHub Actions • Fahrzeiten berechnet ab PLZ 49504 (Lotte)</p>
         </footer>
     </div>
 </body>

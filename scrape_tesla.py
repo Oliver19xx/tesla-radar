@@ -507,17 +507,22 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
     """Erstellt ein interaktives, modernes HTML Dashboard für die schnelle tägliche Übersicht."""
     now_str = datetime.datetime.now(BERLIN_TZ).strftime("%d.%m.%Y um %H:%M Uhr")
     
+    # 1. Aktuell verfügbare Fahrzeuge formatieren
     cards_html = []
+    active_vins = set()
     for c in cars:
+        active_vins.add(c["vin"])
         status_tag = c.get("status_tag", "BEKANNT")
         if status_tag == "NEU":
             status_badge = '<span class="badge badge-new">✨ NEU IM BESTAND</span>'
         elif status_tag == "PREISSENKUNG":
             status_badge = f'<span class="badge badge-price-drop">{c["status_text"]}</span>'
+        elif status_tag == "PREISANSTIEG":
+            status_badge = f'<span class="badge badge-price-drop" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.35);">{c["status_text"]}</span>'
         else:
             status_badge = '<span class="badge badge-info">Verfügbar</span>'
 
-        herkunft_badge = '<span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>' if "Grünheide" in c["herkunft_kurz"] else '<span class="badge badge-shanghai">🇨🇳 Shanghai (CATL)</span>'
+        herkunft_badge = '<span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>' if "Grünheide" in c.get("herkunft_kurz", "") else '<span class="badge badge-shanghai">🇨🇳 Shanghai (CATL)</span>'
         ahk_badge = '<span class="badge badge-feature">⚓ Anhängerkupplung</span>' if c.get("anhaengerkupplung") else ''
         zustand_badge = '<span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>' if not c.get("unfall_oder_schaden") else '<span class="badge badge-accident">⚠️ Reparierter Vorschaden</span>'
         
@@ -582,6 +587,87 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
             </div>
         </div>
         """)
+
+    # 2. Verkaufte / nicht mehr gelistete Fahrzeuge aus der Historie laden
+    sold_cards_html = []
+    sold_count = 0
+    if DB_FILE.exists():
+        try:
+            with open(DB_FILE, "r", encoding="utf-8") as f:
+                history_data = json.load(f)
+            
+            sold_entries = []
+            for vin, entry in history_data.items():
+                if vin.startswith("_") or vin in active_vins:
+                    continue
+                if isinstance(entry, dict) and "data" in entry:
+                    sold_entries.append((vin, entry))
+            
+            # Sortieren nach last_seen absteigend
+            sold_entries.sort(key=lambda x: x[1].get("last_seen", ""), reverse=True)
+            sold_count = len(sold_entries)
+
+            for vin, entry in sold_entries:
+                sc = entry["data"]
+                herkunft_badge = '<span class="badge badge-gruenheide">🇩🇪 Grünheide (BYD Blade)</span>' if "Grünheide" in sc.get("herkunft_kurz", "") else '<span class="badge badge-shanghai">🇨🇳 Shanghai (CATL)</span>'
+                ahk_badge = '<span class="badge badge-feature">⚓ Anhängerkupplung</span>' if sc.get("anhaengerkupplung") else ''
+                last_seen_date = entry.get("last_seen", "Unbekannt")
+                
+                sold_cards_html.append(f"""
+                <div class="car-card is-sold">
+                    <div class="card-top">
+                        <div class="badges-row">
+                            <span class="badge badge-sold">🚫 Verkauft / Nicht mehr gelistet</span>
+                            <span class="badge badge-clean">🛡️ Unfallfrei (CLEAN)</span>
+                            {herkunft_badge}
+                            {ahk_badge}
+                        </div>
+                        <div class="price price-sold">{sc['preis']:,} €</div>
+                    </div>
+                    
+                    <h3 class="car-title">{sc['modell']}</h3>
+                    <div class="car-vin">VIN: {sc['vin']}</div>
+                    
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Kilometerstand</span>
+                            <span class="spec-value km-val">{sc['km']:,} km</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Erstzulassung</span>
+                            <span class="spec-value">{sc['ez']}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Fahrzeit (ab 49504 Lotte)</span>
+                            <span class="spec-value drive-val">🚗 {sc['fahrzeit_str']} ({sc['distanz_km']} km)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Standort</span>
+                            <span class="spec-value location-val">📍 {sc['standort']}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Zuletzt online gesehen</span>
+                            <span class="spec-value" style="color: var(--accent-yellow);">{last_seen_date}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Farbe / Lack</span>
+                            <span class="spec-value">{sc['farbe']}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Akku-Technik</span>
+                            <span class="spec-value">{sc['akku_typ']}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-bottom">
+                        <a href="{sc['url']}" target="_blank" class="order-button btn-sold">
+                            Historisches Inserat bei Tesla prüfen ➔
+                        </a>
+                    </div>
+                </div>
+                """)
+        except Exception as e:
+            print(f"Fehler beim Laden der historischen Fahrzeuge: {e}")
 
     empty_state = """
     <div class="empty-state">
@@ -751,6 +837,11 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
             color: #fbbf24;
             border: 1px solid rgba(245, 158, 11, 0.35);
         }}
+        .badge-sold {{
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }}
         .badge-clean {{
             background: rgba(16, 185, 129, 0.15);
             color: #34d399;
@@ -779,6 +870,43 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
         .badge-info {{
             background: rgba(148, 163, 184, 0.15);
             color: #94a3b8;
+        }}
+        .car-card.is-sold {{
+            opacity: 0.82;
+            border-color: #1e293b;
+            background: #0d1424;
+        }}
+        .car-card.is-sold:hover {{
+            opacity: 1;
+            border-color: #475569;
+        }}
+        .price-sold {{
+            color: #94a3b8 !important;
+            text-decoration: line-through;
+            font-size: 1.4rem;
+        }}
+        .order-button.btn-sold {{
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }}
+        .order-button.btn-sold:hover {{
+            background: #334155;
+            color: #ffffff;
+        }}
+        .section-title {{
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 2.5rem 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+        .section-desc {{
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.25rem;
         }}
         .car-title {{
             font-size: 1.2rem;
@@ -848,9 +976,10 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
             background: var(--card-bg);
             border-radius: 1rem;
             border: 1px solid var(--card-border);
+            margin-top: 1rem;
         }}
         footer {{
-            margin-top: 3.5rem;
+            margin-top: 4rem;
             text-align: center;
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -877,11 +1006,15 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
 
         <div class="stats-bar">
             <div class="stat-card">
-                <div class="stat-label">Passende Angebote (XP7)</div>
+                <div class="stat-label">Aktuell verfügbar (XP7)</div>
                 <div class="stat-value">{len(cars)}</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Günstigster Preis</div>
+                <div class="stat-label">Bereits verkauft / Vergangen</div>
+                <div class="stat-value" style="color: var(--text-muted);">{sold_count}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Günstigster aktiver Preis</div>
                 <div class="stat-value" style="color: var(--accent-green);">{cheapest_str}</div>
             </div>
             <div class="stat-card">
@@ -890,13 +1023,22 @@ def generate_html_report(cars, min_year, max_year, max_price, max_km, xp7_only=T
             </div>
         </div>
 
+        <h2 class="section-title">🟢 Aktuell verfügbare Angebote ({len(cars)})</h2>
         {empty_state}
         <div class="grid">
             {"".join(cards_html)}
         </div>
 
+        {f'''
+        <h2 class="section-title" style="margin-top: 3.5rem;">🏛️ Zuvor erfasste & verkaufte Fahrzeuge ({sold_count})</h2>
+        <p class="section-desc">Diese Angebote entsprachen exakt deinen Suchkriterien, sind aber inzwischen bei Tesla reserviert oder verkauft worden.</p>
+        <div class="grid">
+            {"".join(sold_cards_html)}
+        </div>
+        ''' if sold_cards_html else ''}
+
         <footer>
-            <p>Täglicher Check via <code>./check_angebote.sh</code> • Fahrzeiten berechnet ab PLZ 49504 (Lotte)</p>
+            <p>Automatische Cloud-Überwachung via GitHub Actions • Fahrzeiten berechnet ab PLZ 49504 (Lotte)</p>
         </footer>
     </div>
 </body>
