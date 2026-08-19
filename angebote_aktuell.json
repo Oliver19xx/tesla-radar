@@ -1,36 +1,5 @@
 [
   {
-    "vin": "XP7YGCEJ5PB142212",
-    "modell": "Model Y Hinterradantrieb",
-    "baujahr": 2023,
-    "ez": "27.06.2023",
-    "ez_jahr": 2023,
-    "preis": 33500,
-    "km": 52029,
-    "standort": "Potsdam-Mittelmark",
-    "distanz_km": 410,
-    "fahrzeit_str": "ca. 3h 55m",
-    "fahrzeit_std": 3.9,
-    "bundesland": "BB",
-    "herkunft": "Berlin-Grünheide (Deutschland)",
-    "herkunft_kurz": "Grünheide (XP7)",
-    "akku_typ": "LFP (BYD Blade)",
-    "farbe": "Pearl White Multi-Coat",
-    "felgen": "19-Zoll Gemini-Felgen",
-    "innenraum": "Premium-Innenraum komplett schwarz",
-    "autopilot": "Autopilot",
-    "anhaengerkupplung": false,
-    "unfall_oder_schaden": false,
-    "zustand_text": "🛡️ Unfallfrei (CLEAN)",
-    "vehicle_history": "CLEAN",
-    "garantie_fahrzeug": "06/2027",
-    "garantie_akku": "06/2031",
-    "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212",
-    "raw_updated": "2026-08-19T10:48:22.178694+02:00",
-    "status_tag": "NEU",
-    "status_text": "✨ NEU"
-  },
-  {
     "vin": "XP7YGCEJ7PB153017",
     "modell": "Model Y Hinterradantrieb",
     "baujahr": 2023,
@@ -57,9 +26,9 @@
     "garantie_fahrzeug": "06/2027",
     "garantie_akku": "06/2031",
     "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-    "raw_updated": "2026-08-19T10:48:22.178733+02:00",
-    "status_tag": "NEU",
-    "status_text": "✨ NEU"
+    "raw_updated": "2026-08-19T10:48:55.988080+02:00",
+    "status_tag": "BEKANNT",
+    "status_text": "Verfügbar"
   },
   {
     "vin": "XP7YGCES2RB382734",
@@ -88,8 +57,8 @@
     "garantie_fahrzeug": "02/2028",
     "garantie_akku": "02/2032",
     "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-    "raw_updated": "2026-08-19T10:48:22.179093+02:00",
-    "status_tag": "NEU",
-    "status_text": "✨ NEU"
+    "raw_updated": "2026-08-19T10:48:55.989985+02:00",
+    "status_tag": "BEKANNT",
+    "status_text": "Verfügbar"
   }
 ]
