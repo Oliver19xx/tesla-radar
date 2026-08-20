@@ -31,7 +31,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212",
-      "raw_updated": "2026-08-20T14:34:25.487905+02:00"
+      "raw_updated": "2026-08-20T16:29:59.222675+02:00"
     }
   },
   "XP7YGCEJ7PB153017": {
@@ -66,7 +66,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-      "raw_updated": "2026-08-20T14:34:25.488377+02:00"
+      "raw_updated": "2026-08-20T16:29:59.222729+02:00"
     }
   },
   "XP7YGCES2RB382734": {
@@ -101,7 +101,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-      "raw_updated": "2026-08-20T14:34:25.489441+02:00"
+      "raw_updated": "2026-08-20T16:29:59.223199+02:00"
     }
   },
   "_last_active_vins": [
@@ -143,7 +143,7 @@
       "garantie_fahrzeug": "06/2028",
       "garantie_akku": "06/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS3RB387195",
-      "raw_updated": "2026-08-20T14:34:25.489872+02:00"
+      "raw_updated": "2026-08-20T16:29:59.223428+02:00"
     }
   },
   "XP7YGCEJ0PB149083": {
@@ -178,7 +178,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ0PB149083",
-      "raw_updated": "2026-08-20T14:34:25.490139+02:00"
+      "raw_updated": "2026-08-20T16:29:59.223641+02:00"
     }
   }
 }
