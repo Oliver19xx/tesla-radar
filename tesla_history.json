@@ -104,16 +104,7 @@
       "raw_updated": "2026-08-21T18:24:35.150841+02:00"
     }
   },
-  "_last_active_vins": [
-    "XP7YGCEJ5PB142212",
-    "XP7YGCEJ7PB153017",
-    "XP7YGCES2RB382734",
-    "XP7YGCFS3RB387195",
-    "XP7YGCEJ0PB149083",
-    "XP7YGCES9RB394038",
-    "XP7YGCFS7RB365071",
-    "XP7YGCES7RB380316"
-  ],
+  "_last_active_vins": [],
   "XP7YGCFS3RB387195": {
     "first_seen": "2026-08-20",
     "last_seen": "2026-08-21",
