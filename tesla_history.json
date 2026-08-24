@@ -1,16 +1,16 @@
 {
   "XP7YGCEJ5PB142212": {
     "first_seen": "2026-08-19",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 33500,
-    "last_price": 33000,
+    "last_price": 33300,
     "data": {
       "vin": "XP7YGCEJ5PB142212",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2023,
       "ez": "27.06.2023",
       "ez_jahr": 2023,
-      "preis": 33000,
+      "preis": 33300,
       "km": 52029,
       "standort": "Potsdam-Mittelmark",
       "distanz_km": 410,
@@ -31,22 +31,22 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212",
-      "raw_updated": "2026-08-23T22:15:00.792433+02:00"
+      "raw_updated": "2026-08-24T06:38:18.422713+02:00"
     }
   },
   "XP7YGCEJ7PB153017": {
     "first_seen": "2026-08-19",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 33600,
-    "last_price": 33200,
+    "last_price": 33500,
     "data": {
       "vin": "XP7YGCEJ7PB153017",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2023,
       "ez": "20.06.2023",
       "ez_jahr": 2023,
-      "preis": 33200,
-      "km": 49472,
+      "preis": 33500,
+      "km": 49473,
       "standort": "Parsdorf",
       "distanz_km": 650,
       "fahrzeit_str": "ca. 6h 00m",
@@ -66,21 +66,21 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-      "raw_updated": "2026-08-23T22:15:00.792520+02:00"
+      "raw_updated": "2026-08-24T06:38:18.422789+02:00"
     }
   },
   "XP7YGCES2RB382734": {
     "first_seen": "2026-08-19",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 34500,
-    "last_price": 34000,
+    "last_price": 34300,
     "data": {
       "vin": "XP7YGCES2RB382734",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "26.02.2024",
       "ez_jahr": 2024,
-      "preis": 34000,
+      "preis": 34300,
       "km": 38319,
       "standort": "Holzgerlingen",
       "distanz_km": 520,
@@ -101,31 +101,31 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-      "raw_updated": "2026-08-23T22:15:00.793139+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423150+02:00"
     }
   },
   "_last_active_vins": [
     "XP7YGCEJ5PB142212",
     "XP7YGCEJ7PB153017",
     "XP7YGCES2RB382734",
+    "XP7YGCFS7RB365071",
     "XP7YGCFS3RB387195",
     "XP7YGCES7RB380316",
     "XP7YGCEJ0PB149083",
-    "XP7YGCES9RB394038",
-    "XP7YGCFS7RB365071"
+    "XP7YGCES9RB394038"
   ],
   "XP7YGCFS3RB387195": {
     "first_seen": "2026-08-20",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 34700,
-    "last_price": 34400,
+    "last_price": 34700,
     "data": {
       "vin": "XP7YGCFS3RB387195",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "06.06.2024",
       "ez_jahr": 2024,
-      "preis": 34400,
+      "preis": 34700,
       "km": 21797,
       "standort": "Hanau",
       "distanz_km": 315,
@@ -146,21 +146,21 @@
       "garantie_fahrzeug": "06/2028",
       "garantie_akku": "06/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS3RB387195",
-      "raw_updated": "2026-08-23T22:15:00.793527+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423466+02:00"
     }
   },
   "XP7YGCEJ0PB149083": {
     "first_seen": "2026-08-20",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 35000,
-    "last_price": 34500,
+    "last_price": 34800,
     "data": {
       "vin": "XP7YGCEJ0PB149083",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2023,
       "ez": "15.06.2023",
       "ez_jahr": 2023,
-      "preis": 34500,
+      "preis": 34800,
       "km": 25501,
       "standort": "Potsdam-Mittelmark",
       "distanz_km": 410,
@@ -181,22 +181,22 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ0PB149083",
-      "raw_updated": "2026-08-23T22:15:00.793558+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423641+02:00"
     }
   },
   "XP7YGCES9RB394038": {
     "first_seen": "2026-08-21",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 34500,
-    "last_price": 34700,
+    "last_price": 35000,
     "data": {
       "vin": "XP7YGCES9RB394038",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "16.05.2024",
       "ez_jahr": 2024,
-      "preis": 34700,
-      "km": 53837,
+      "preis": 35000,
+      "km": 53838,
       "standort": "Parsdorf",
       "distanz_km": 650,
       "fahrzeit_str": "ca. 6h 00m",
@@ -216,21 +216,21 @@
       "garantie_fahrzeug": "05/2028",
       "garantie_akku": "05/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES9RB394038",
-      "raw_updated": "2026-08-23T22:15:00.794254+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423932+02:00"
     }
   },
   "XP7YGCFS7RB365071": {
     "first_seen": "2026-08-21",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 34800,
-    "last_price": 34900,
+    "last_price": 34400,
     "data": {
       "vin": "XP7YGCFS7RB365071",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "16.02.2024",
       "ez_jahr": 2024,
-      "preis": 34900,
+      "preis": 34400,
       "km": 23201,
       "standort": "Hamburg",
       "distanz_km": 230,
@@ -251,22 +251,22 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS7RB365071",
-      "raw_updated": "2026-08-23T22:15:00.794375+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423202+02:00"
     }
   },
   "XP7YGCES7RB380316": {
     "first_seen": "2026-08-21",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "initial_price": 34800,
-    "last_price": 34400,
+    "last_price": 34700,
     "data": {
       "vin": "XP7YGCES7RB380316",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "23.02.2024",
       "ez_jahr": 2024,
-      "preis": 34400,
-      "km": 46936,
+      "preis": 34700,
+      "km": 46937,
       "standort": "Hanau",
       "distanz_km": 315,
       "fahrzeit_str": "ca. 3h 10m",
@@ -286,7 +286,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES7RB380316",
-      "raw_updated": "2026-08-23T22:15:00.793497+02:00"
+      "raw_updated": "2026-08-24T06:38:18.423519+02:00"
     }
   }
 }
