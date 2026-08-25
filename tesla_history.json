@@ -31,7 +31,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212",
-      "raw_updated": "2026-08-25T08:35:28.847812+02:00"
+      "raw_updated": "2026-08-25T10:34:27.245032+02:00"
     }
   },
   "XP7YGCEJ7PB153017": {
@@ -66,7 +66,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-      "raw_updated": "2026-08-25T08:35:28.847943+02:00"
+      "raw_updated": "2026-08-25T10:34:27.245330+02:00"
     }
   },
   "XP7YGCES2RB382734": {
@@ -101,7 +101,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-      "raw_updated": "2026-08-25T08:35:28.848386+02:00"
+      "raw_updated": "2026-08-25T10:34:27.245803+02:00"
     }
   },
   "_last_active_vins": [
@@ -109,8 +109,8 @@
     "XP7YGCEJ7PB153017",
     "XP7YGCES2RB382734",
     "XP7YGCFS7RB365071",
-    "XP7YGCFS3RB387195",
     "XP7YGCES7RB380316",
+    "XP7YGCFS3RB387195",
     "XP7YGCEJ0PB149083",
     "XP7YGCES9RB394038"
   ],
@@ -146,7 +146,7 @@
       "garantie_fahrzeug": "06/2028",
       "garantie_akku": "06/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS3RB387195",
-      "raw_updated": "2026-08-25T08:35:28.848688+02:00"
+      "raw_updated": "2026-08-25T10:34:27.246033+02:00"
     }
   },
   "XP7YGCEJ0PB149083": {
@@ -181,7 +181,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ0PB149083",
-      "raw_updated": "2026-08-25T08:35:28.848818+02:00"
+      "raw_updated": "2026-08-25T10:34:27.246083+02:00"
     }
   },
   "XP7YGCES9RB394038": {
@@ -216,7 +216,7 @@
       "garantie_fahrzeug": "05/2028",
       "garantie_akku": "05/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES9RB394038",
-      "raw_updated": "2026-08-25T08:35:28.849593+02:00"
+      "raw_updated": "2026-08-25T10:34:27.246218+02:00"
     }
   },
   "XP7YGCFS7RB365071": {
@@ -251,22 +251,22 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS7RB365071",
-      "raw_updated": "2026-08-25T08:35:28.848511+02:00"
+      "raw_updated": "2026-08-25T10:34:27.245903+02:00"
     }
   },
   "XP7YGCES7RB380316": {
     "first_seen": "2026-08-21",
     "last_seen": "2026-08-25",
     "initial_price": 34800,
-    "last_price": 34500,
+    "last_price": 34400,
     "data": {
       "vin": "XP7YGCES7RB380316",
       "modell": "Model Y Hinterradantrieb",
       "baujahr": 2024,
       "ez": "23.02.2024",
       "ez_jahr": 2024,
-      "preis": 34500,
-      "km": 46936,
+      "preis": 34400,
+      "km": 46937,
       "standort": "Hanau",
       "distanz_km": 315,
       "fahrzeit_str": "ca. 3h 10m",
@@ -286,7 +286,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES7RB380316",
-      "raw_updated": "2026-08-25T08:35:28.848656+02:00"
+      "raw_updated": "2026-08-25T10:34:27.245983+02:00"
     }
   }
 }
