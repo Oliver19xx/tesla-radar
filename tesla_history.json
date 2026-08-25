@@ -31,7 +31,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ5PB142212",
-      "raw_updated": "2026-08-25T18:28:48.114557+02:00"
+      "raw_updated": "2026-08-25T20:30:11.148240+02:00"
     }
   },
   "XP7YGCEJ7PB153017": {
@@ -46,7 +46,7 @@
       "ez": "20.06.2023",
       "ez_jahr": 2023,
       "preis": 33300,
-      "km": 49473,
+      "km": 49472,
       "standort": "Parsdorf",
       "distanz_km": 650,
       "fahrzeit_str": "ca. 6h 00m",
@@ -66,7 +66,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-      "raw_updated": "2026-08-25T18:28:48.114637+02:00"
+      "raw_updated": "2026-08-25T20:30:11.148383+02:00"
     }
   },
   "XP7YGCES2RB382734": {
@@ -101,7 +101,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-      "raw_updated": "2026-08-25T18:28:48.115635+02:00"
+      "raw_updated": "2026-08-25T20:30:11.148789+02:00"
     }
   },
   "_last_active_vins": [
@@ -180,7 +180,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ0PB149083",
-      "raw_updated": "2026-08-25T18:28:48.116899+02:00"
+      "raw_updated": "2026-08-25T20:30:11.149316+02:00"
     }
   },
   "XP7YGCES9RB394038": {
@@ -195,7 +195,7 @@
       "ez": "16.05.2024",
       "ez_jahr": 2024,
       "preis": 34800,
-      "km": 53838,
+      "km": 53837,
       "standort": "Parsdorf",
       "distanz_km": 650,
       "fahrzeit_str": "ca. 6h 00m",
@@ -215,7 +215,7 @@
       "garantie_fahrzeug": "05/2028",
       "garantie_akku": "05/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES9RB394038",
-      "raw_updated": "2026-08-25T18:28:48.117712+02:00"
+      "raw_updated": "2026-08-25T20:30:11.149513+02:00"
     }
   },
   "XP7YGCFS7RB365071": {
@@ -250,7 +250,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS7RB365071",
-      "raw_updated": "2026-08-25T18:28:48.116105+02:00"
+      "raw_updated": "2026-08-25T20:30:11.149136+02:00"
     }
   },
   "XP7YGCES7RB380316": {
@@ -265,7 +265,7 @@
       "ez": "23.02.2024",
       "ez_jahr": 2024,
       "preis": 34400,
-      "km": 46937,
+      "km": 46936,
       "standort": "Hanau",
       "distanz_km": 315,
       "fahrzeit_str": "ca. 3h 10m",
@@ -285,7 +285,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES7RB380316",
-      "raw_updated": "2026-08-25T18:28:48.116683+02:00"
+      "raw_updated": "2026-08-25T20:30:11.149203+02:00"
     }
   },
   "XP7YGCEKXPB089239": {
