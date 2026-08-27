@@ -46,7 +46,7 @@
       "ez": "20.06.2023",
       "ez_jahr": 2023,
       "preis": 32600,
-      "km": 49473,
+      "km": 49472,
       "standort": "Parsdorf",
       "distanz_km": 650,
       "fahrzeit_str": "ca. 6h 00m",
@@ -66,7 +66,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ7PB153017",
-      "raw_updated": "2026-08-27T00:38:37.452872+02:00"
+      "raw_updated": "2026-08-27T16:54:46.923520+02:00"
     }
   },
   "XP7YGCES2RB382734": {
@@ -101,12 +101,11 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES2RB382734",
-      "raw_updated": "2026-08-27T00:38:37.456147+02:00"
+      "raw_updated": "2026-08-27T16:54:46.930426+02:00"
     }
   },
   "_last_active_vins": [
     "XP7YGCEJ7PB153017",
-    "XP7YGCEJ5PB142212",
     "XP7YGCES2RB382734",
     "XP7YGCFS7RB365071",
     "XP7YGCES7RB380316",
@@ -179,7 +178,7 @@
       "garantie_fahrzeug": "06/2027",
       "garantie_akku": "06/2031",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCEJ0PB149083",
-      "raw_updated": "2026-08-27T00:38:37.456758+02:00"
+      "raw_updated": "2026-08-27T16:54:46.931278+02:00"
     }
   },
   "XP7YGCES9RB394038": {
@@ -249,7 +248,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCFS7RB365071",
-      "raw_updated": "2026-08-27T00:38:37.456418+02:00"
+      "raw_updated": "2026-08-27T16:54:46.930745+02:00"
     }
   },
   "XP7YGCES7RB380316": {
@@ -264,7 +263,7 @@
       "ez": "23.02.2024",
       "ez_jahr": 2024,
       "preis": 34700,
-      "km": 46937,
+      "km": 46936,
       "standort": "Hanau",
       "distanz_km": 315,
       "fahrzeit_str": "ca. 3h 10m",
@@ -284,7 +283,7 @@
       "garantie_fahrzeug": "02/2028",
       "garantie_akku": "02/2032",
       "url": "https://www.tesla.com/de_DE/my/order/XP7YGCES7RB380316",
-      "raw_updated": "2026-08-27T00:38:37.456502+02:00"
+      "raw_updated": "2026-08-27T16:54:46.930809+02:00"
     }
   },
   "XP7YGCEKXPB089239": {
